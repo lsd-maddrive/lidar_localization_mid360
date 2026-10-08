@@ -1,0 +1,34 @@
+# ROS 2 build and runtime artifacts
+build/
+install/
+log/
+
+# Python cache and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Point clouds, SLAM maps and rosbag recordings
+*.pcd
+*.ply
+*.mm
+*.mola
+*.bag
+*.db3
+*.mcap
+
+# Generated map conversion output
+convert_pcd_to_nav2/nav2_map.pgm
+convert_pcd_to_nav2/nav2_map.yaml
+convert_pcd_to_nav2/*.txt
+
+# Generated data and temporary files
+maps/
+recordings/
+results/
+output/
+tmp/
+*.csv
+*.log
+

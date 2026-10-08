@@ -1,0 +1,32 @@
+map_odom_ekf:
+  ros__parameters:
+    frequency: 20.0
+    sensor_timeout: 0.5
+    two_d_mode: false
+    publish_tf: true
+    print_diagnostics: true
+    permit_corrected_publication: false
+    predict_to_current_time: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: livox_frame
+    world_frame: map
+
+    # MOLA scan matching can publish delayed measurements. Rewind and replay
+    # the filter history instead of applying an old pose as if it were current.
+    smooth_lagged_data: true
+    history_length: 1.5
+
+    # Fuse only the absolute map pose from MOLA. Fast-LIO remains the source of
+    # odom->livox_frame; robot_localization derives map->odom from that TF.
+    odom0: /lidar_odometry/pose
+    odom0_config: [true, true, true,
+                   true, true, true,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom0_queue_size: 50
+    odom0_differential: false
+    odom0_relative: false
+    odom0_pose_rejection_threshold: 5.0

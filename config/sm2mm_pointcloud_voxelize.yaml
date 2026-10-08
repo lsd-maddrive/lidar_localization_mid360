@@ -1,0 +1,68 @@
+# SimpleMap -> metric map for mola_lidar_odometry localization.
+# The global layer must be a CVoxelMap because the Cov2Cov matcher requires
+# NearestPointWithCovCapable.
+
+generators:
+  - class_name: mp2p_icp_filters::Generator
+    params:
+      target_layer: "localmap"
+      process_class_names_regex: ""
+      metric_map_definition:
+        class: mola::KeyframePointCloudMap
+        plugin: "libmola_metric_maps.so"
+        creationOpts:
+          max_search_keyframes: 3
+          k_correspondences_for_cov: 20
+          min_correspondences_for_cov: 5
+          max_distance_for_cov: 2.0
+        insertOpts:
+          remove_frames_farther_than: 1000.0
+        likelihoodOpts: ~
+        renderOpts: ~
+
+  - class_name: mp2p_icp_filters::Generator
+    params:
+      target_layer: "raw"
+      throw_on_unhandled_observation_class: true
+      process_class_names_regex: ".*"
+      metric_map_definition:
+        class: mrpt::maps::CPointsMapXYZIRT
+
+filters:
+  - class_name: mp2p_icp_filters::FilterAdjustTimestamps
+    params:
+      pointcloud_layer: "raw"
+      silently_ignore_no_timestamps: true
+      method: "TimestampAdjustMethod::MiddleIsZero"
+
+  - class_name: mp2p_icp_filters::FilterDeskew
+    params:
+      input_pointcloud_layer: "raw"
+      output_pointcloud_layer: "deskewed"
+      silently_ignore_no_timestamps: true
+      output_layer_class: "mrpt::maps::CPointsMapXYZIRT"
+      twist: [vx, vy, vz, wx, wy, wz]
+      points_already_global: true
+      robot_pose: [robot_x, robot_y, robot_z, robot_yaw, robot_pitch, robot_roll]
+
+  - class_name: mp2p_icp_filters::FilterDecimateVoxels
+    params:
+      input_pointcloud_layer: "deskewed"
+      output_pointcloud_layer: "decimated"
+      voxel_filter_resolution: 0.05
+      decimate_method: DecimateMethod::FirstPoint
+
+  - class_name: mp2p_icp_filters::FilterMerge
+    params:
+      input_pointcloud_layer: "decimated"
+      target_layer: "localmap"
+      robot_pose: [robot_x, robot_y, robot_z, robot_yaw, robot_pitch, robot_roll]
+
+  - class_name: mp2p_icp_filters::FilterDeleteLayer
+    params:
+      pointcloud_layer_to_remove: ["raw", "deskewed", "decimated"]
+
+final_filters:
+  - class_name: mp2p_icp_filters::FilterDeleteLayer
+    params:
+      pointcloud_layer_to_remove: ["raw"]
