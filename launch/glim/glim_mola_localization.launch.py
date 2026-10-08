@@ -26,11 +26,13 @@ def generate_launch_description():
         FindPackageShare("lidar_localization_mid360"), "config", "MID360_config.json"
         ])),
         DeclareLaunchArgument("glim_config", default_value=PathJoinSubstitution([
-            EnvironmentVariable("FORKLIFT_WS", default_value="."), "runtime", "glim_odom_mid360"
+            EnvironmentVariable("FORKLIFT_WS", default_value="."), "runtime", "glim_localization_mid360"
         ])),
         DeclareLaunchArgument("map_file", description="Absolute path to MOLA .mm metric map"),
         DeclareLaunchArgument("initial_pose", default_value="[0, 0, 0, 0, 0, 0]"),
-        DeclareLaunchArgument("use_rviz", default_value="True"),
+        # Keep this argument distinct from the nested MOLA launch's
+        # ``use_rviz`` argument, which is intentionally set to False.
+        DeclareLaunchArgument("use_rviz_viewer", default_value="True"),
         DeclareLaunchArgument("rviz_config", default_value=PathJoinSubstitution([
         FindPackageShare("lidar_localization_mid360"), "config", "lidar_odometry.rviz"
         ])),
@@ -41,6 +43,8 @@ def generate_launch_description():
         # MOLA publishes the raw map pose topic, while the dedicated smoother
         # below is the only publisher of map->odom.
         SetEnvironmentVariable(name="MOLA_LOCALIZATION_PUBLISH_TF", value="False"),
+        # Keep MolaViz disabled: RViz2 is the only GUI for this launch.
+        SetEnvironmentVariable(name="MOLA_WITH_GUI", value="False"),
         Node(
             package="livox_ros_driver2", executable="livox_ros_driver2_node",
             name="livox_lidar_publisher", output="screen",
@@ -54,6 +58,11 @@ def generate_launch_description():
         Node(
             package="glim_ros", executable="glim_rosnode", name="glim_ros", output="screen",
             parameters=[{"config_path": glim_config, "localization": False, "use_sim_time": False}],
+            remappings=[
+                ("/os_cloud_node/points", "/livox/points"),
+                ("/os_cloud_node/imu", "/livox/imu"),
+                ("/livox/lidar", "/livox/points"),
+            ],
         ),
         Node(
             package="livox_to_pointcloud2", executable="livox_to_pointcloud2_node",
@@ -76,7 +85,8 @@ def generate_launch_description():
                 "mola_initial_map_mm_file": map_file,
                 "mola_bridge_odometry_frame": "odom",
                 "mola_state_estimator_reference_frame": "map",
-                "publish_localization_following_rep105": "True",
+                # map_odom_smoother.py is the single map->odom TF publisher.
+                "publish_localization_following_rep105": "False",
                 "start_mapping_enabled": "False",
                 "start_active": "True",
                 "generate_simplemap": "False",
@@ -91,7 +101,7 @@ def generate_launch_description():
             name="rviz2",
             output="screen",
             arguments=["-d", rviz_config],
-            condition=IfCondition(LaunchConfiguration("use_rviz")),
+            condition=IfCondition(LaunchConfiguration("use_rviz_viewer")),
         ),
         Node(
             package="lidar_localization_mid360",
