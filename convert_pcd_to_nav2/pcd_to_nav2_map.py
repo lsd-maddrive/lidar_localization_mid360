@@ -76,7 +76,13 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Convert XYZ text or MOLA .mm to a Nav2 map")
     parser.add_argument("input", type=Path, help="XYZ text file or compressed MOLA .mm")
     parser.add_argument("--output-dir", type=Path, default=Path.cwd())
+    parser.add_argument("--min-z", type=float, default=MIN_Z,
+                        help=f"minimum Z for the horizontal slice (default: {MIN_Z})")
+    parser.add_argument("--max-z", type=float, default=MAX_Z,
+                        help=f"maximum Z for the horizontal slice (default: {MAX_Z})")
     args = parser.parse_args()
+    if args.min_z >= args.max_z:
+        parser.error("--min-z must be smaller than --max-z")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="mm_to_nav2-") as temporary:
         input_path = args.input
@@ -85,7 +91,7 @@ def main() -> None:
         points = np.loadtxt(input_path, usecols=(0, 1, 2), dtype=np.float32)
         points = np.atleast_2d(points)
         points = points[np.isfinite(points).all(axis=1)]
-        points = points[(points[:, 2] >= MIN_Z) & (points[:, 2] <= MAX_Z)]
+        points = points[(points[:, 2] >= args.min_z) & (points[:, 2] <= args.max_z)]
         if len(points) == 0:
             raise RuntimeError("No points remain after Z filtering")
 

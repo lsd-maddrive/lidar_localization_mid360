@@ -5,14 +5,14 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /TF1/Tree1
+        - /TF1/Frames1
         - /LidarOdometry1/Shape1
         - /LocalMap1/Topic1
-        - /Path1
-        - /Map1
         - /Map1/Topic1
-      Splitter Ratio: 0.5
-    Tree Height: 1099
+        - /Path2
+        - /Path2/Topic1
+      Splitter Ratio: 0.4470588266849518
+    Tree Height: 707
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -30,9 +30,13 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LocalMap
+    SyncSource: ""
   - Class: rviz_common/Transformation
     Name: Transformation
+  - Class: nav2_rviz_plugins/Route Tool
+    Name: Route Tool
+  - Class: nav2_rviz_plugins/Route Tool
+    Name: Route Tool
 Visualization Manager:
   Class: ""
   Displays:
@@ -51,7 +55,7 @@ Visualization Manager:
         Y: 0
         Z: 0
       Plane: XY
-      Plane Cell Count: 10
+      Plane Cell Count: 110
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz_default_plugins/TF
@@ -63,11 +67,29 @@ Visualization Manager:
         All Enabled: true
         base_footprint:
           Value: true
+        base_imu_link:
+          Value: true
+        base_link:
+          Value: true
+        base_link_2d:
+          Value: true
+        camera_link:
+          Value: true
         livox_frame:
           Value: true
         map:
           Value: true
+        map_2d:
+          Value: true
+        oak-d-base-frame:
+          Value: true
         odom:
+          Value: true
+        odom_2d:
+          Value: true
+        point1_2d:
+          Value: true
+        target_2d:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -75,11 +97,14 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          odom:
-            livox_frame:
-              base_footprint:
-                {}
+        map_2d:
+          odom_2d:
+            base_link_2d:
+              {}
+            target_2d:
+              {}
+          point1_2d:
+            {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -97,7 +122,7 @@ Visualization Manager:
       Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 0.9900000095367432
+      Max Intensity: 255
       Min Color: 0; 0; 0
       Min Intensity: 0
       Name: raw lidar
@@ -111,7 +136,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /lidar1_points
+        Value: /livox/points
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
@@ -169,9 +194,9 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 16.619712829589844
+      Max Intensity: 7.304948329925537
       Min Color: 0; 0; 0
-      Min Intensity: -1.5003927946090698
+      Min Intensity: -2.657712459564209
       Name: LocalMap
       Position Transformer: XYZ
       Selectable: true
@@ -299,10 +324,183 @@ Visualization Manager:
         Value: /map_updates
       Use Timestamp: false
       Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 245; 194; 17
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Billboards
+      Line Width: 0.05999999865889549
+      Name: GlobalRoute
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.10000000149011612
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /plan
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 255; 80; 220
+      Enabled: true
+      Head Diameter: 0.15
+      Head Length: 0.1
+      Length: 0.15
+      Line Style: Lines
+      Line Width: 0.06
+      Name: Pallet maneuver path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.03
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.03
+      Shaft Diameter: 0.05
+      Shaft Length: 0.05
+      Topic:
+        Depth: 1
+        Durability Policy: Transient Local
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /maneuver/path
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/PointStamped
+      Color: 26; 95; 180
+      Enabled: true
+      History Length: 1
+      Name: PointStamped
+      Radius: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /clicked_point
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 237; 51; 59
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Billboards
+      Line Width: 0.05999999865889549
+      Name: LocalPath
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.10000000149011612
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /lookahead_collision_arc
+      Value: true
+    - Alpha: 0.8999999761581421
+      Binary representation: false
+      Binary threshold: 100
+      Class: rviz_default_plugins/Map
+      Color Scheme: costmap
+      Draw Behind: false
+      Enabled: true
+      Name: LocalCostmap
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_costmap/costmap
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /local_costmap/costmap_updates
+      Use Timestamp: false
+      Value: true
+    - Alpha: 0.699999988079071
+      Binary representation: false
+      Binary threshold: 100
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: GlobalCostmap
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_costmap/static_layer
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /global_costmap/static_layer_updates
+      Use Timestamp: false
+      Value: true
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz_default_plugins/Path
+      Color: 25; 255; 0
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic:
+        Depth: 5
+        Durability Policy: System Default
+        Filter size: 10
+        History Policy: Keep All
+        Reliability Policy: Reliable
+        Value: /maneuver/path
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: map
+    Fixed Frame: map_2d
     Frame Rate: 30
   Name: root
   Tools:
@@ -345,33 +543,35 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.4339914321899414
+      Distance: 10.389147758483887
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.3913447856903076
-        Y: 0.6212066411972046
-        Z: -1.8903584480285645
+        X: 2.443540573120117
+        Y: -10.637472152709961
+        Z: -2.5463781356811523
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.2547967433929443
+      Pitch: 1.5697963237762451
       Target Frame: livox_frame
       Value: Orbit (rviz_default_plugins)
-      Yaw: 4.735374927520752
+      Yaw: 1.8253647089004517
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1403
+  Height: 1011
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000004d9fc0200000009fb0000001200530065006c0065006300740069006f006e00000000ec0000007d0000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001fa0000024b00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003f000004d9000000cc00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c005400720061006e00730066006f0072006d006100740069006f006e00000002e4000000b30000007e00ffffff000000010000018900000375fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000375000000a900fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b20000000000000000000000020000073a000000a9fc0100000003fb0000000c0069006d00610067006500300000000000000003480000000000000000fb0000000c0069006d006100670065003100000000000000073a0000000000000000fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000a000000003efc0100000002fb0000000800540069006d0065010000000000000a000000026f00fffffffb0000000800540069006d00650100000000000004500000000000000000000008a4000004d900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000021100000351fc020000000bfb0000001200530065006c0065006300740069006f006e00000000ec0000007d0000005d00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001fa0000024b00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003f00000351000000cc00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000001c005400720061006e00730066006f0072006d006100740069006f006e00000002e4000000b30000007e00fffffffb000000140052006f00750074006500200054006f006f006c000000027a000001160000019800fffffffb000000140052006f00750074006500200054006f006f006c00000001f8000001980000019800ffffff000000010000018900000375fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000375000000a900fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b20000000000000000000000020000073a000000a9fc0100000003fb0000000c0069006d00610067006500300000000000000003480000000000000000fb0000000c0069006d006100670065003100000000000000073a0000000000000000fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000074e0000003efc0100000002fb0000000800540069006d006501000000000000074e0000026f00fffffffb0000000800540069006d00650100000000000004500000000000000000000005370000035100000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Route Tool:
+    collapsed: false
   Selection:
     collapsed: false
   Time:
@@ -382,6 +582,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 2560
-  X: 0
-  Y: 0
+  Width: 1870
+  X: 50
+  Y: 32

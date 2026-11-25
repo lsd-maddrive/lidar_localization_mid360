@@ -2,7 +2,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import EnvironmentVariable, LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
@@ -25,14 +25,16 @@ def generate_launch_description():
         DeclareLaunchArgument("driver_config", default_value=PathJoinSubstitution([
         FindPackageShare("lidar_localization_mid360"), "config", "MID360_config.json"
         ])),
-        DeclareLaunchArgument("glim_config", default_value=PathJoinSubstitution([
-            EnvironmentVariable("FORKLIFT_WS", default_value="."), "runtime", "glim_localization_mid360"
-        ])),
+        DeclareLaunchArgument(
+            "glim_config",
+            default_value="/home/rei/forklift_ws/runtime/glim_localization_mid360",
+        ),
         DeclareLaunchArgument("map_file", description="Absolute path to MOLA .mm metric map"),
         DeclareLaunchArgument("initial_pose", default_value="[0, 0, 0, 0, 0, 0]"),
         # Keep this argument distinct from the nested MOLA launch's
         # ``use_rviz`` argument, which is intentionally set to False.
         DeclareLaunchArgument("use_rviz_viewer", default_value="True"),
+        DeclareLaunchArgument("publish_trajectories", default_value="True"),
         DeclareLaunchArgument("rviz_config", default_value=PathJoinSubstitution([
         FindPackageShare("lidar_localization_mid360"), "config", "lidar_odometry.rviz"
         ])),
@@ -124,6 +126,7 @@ def generate_launch_description():
             executable="lidar_map_path_publisher.py",
             name="lidar_map_path_publisher",
             output="screen",
+            condition=IfCondition(LaunchConfiguration("publish_trajectories")),
             parameters=[{
                 "map_frame": "map",
                 "lidar_frame": "livox_frame",
@@ -138,6 +141,7 @@ def generate_launch_description():
             executable="lidar_map_path_publisher.py",
             name="lidar_odom_path_publisher",
             output="screen",
+            condition=IfCondition(LaunchConfiguration("publish_trajectories")),
             parameters=[{
                 "map_frame": "odom",
                 "lidar_frame": "livox_frame",
@@ -146,5 +150,6 @@ def generate_launch_description():
                 "min_distance": 0.03,
                 "max_points": 20000,
             }],
+            
         ),
     ])
